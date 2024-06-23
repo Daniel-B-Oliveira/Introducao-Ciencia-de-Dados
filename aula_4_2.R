@@ -1,1 +1,0 @@
-dados <- read.table(file = "dados.txt", header = TRUE, sep = ';')
