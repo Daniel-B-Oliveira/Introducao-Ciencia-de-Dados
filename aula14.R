@@ -1,5 +1,7 @@
 library(class)
 library(caret)
+library(rpart)
+library(rpart.plot)
 
 dados <- read.csv("cancer.csv", header = TRUE)
 str(dados)
@@ -32,3 +34,24 @@ modelo_knn <- knn(train = scale(treinamento[,-1]),
                   k = 5)
 
 mean(modelo_knn == teste$diagnosis)
+
+resultados <- data.frame(modelo = "knn", acuracia = mean(modelo_knn == teste$diagnosis))
+resultados
+
+?rpart
+modelo_arvore <- rpart(formula = diagnosis ~.,
+                       data = treinamento,
+                       method = "class")
+
+rpart.plot(modelo_arvore, extra = 101)
+
+
+?predict
+previsao_arvore <- predict(modelo_arvore,
+                           newdata = teste,
+                           type = "class")
+
+acuracia_arvore <- mean(previsao_arvore == teste$diagnosis)
+resultados <- rbind(resultados, c(modelo = "arvore", acuracia = mean(previsao_arvore == teste$diagnosis)))
+
+
