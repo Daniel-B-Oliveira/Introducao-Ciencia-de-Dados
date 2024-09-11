@@ -20,7 +20,7 @@ library(class)
 ?knn
 
 modelo_knn <- knn(train = treinamento_padronizado, test = teste_padronizado, cl = treinamento$diagnosis, k = 1)
-#Analise cruzada: pode definir qual o melhor valor de k-vizinhos
+#cross validation: pode definir qual o melhor valor de k-vizinhos
 
 acuracia_knn <- mean(teste$diagnosis == modelo_knn)
 
