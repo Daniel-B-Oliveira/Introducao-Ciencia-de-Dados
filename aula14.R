@@ -2,6 +2,7 @@ library(class)
 library(caret)
 library(rpart)
 library(rpart.plot)
+library(randomForest)
 
 dados <- read.csv("cancer.csv", header = TRUE)
 str(dados)
@@ -54,4 +55,13 @@ previsao_arvore <- predict(modelo_arvore,
 acuracia_arvore <- mean(previsao_arvore == teste$diagnosis)
 resultados <- rbind(resultados, c(modelo = "arvore", acuracia = mean(previsao_arvore == teste$diagnosis)))
 
+resultados
 
+?randomForest
+
+modelo_floresta <- randomForest(formula = diagnosis ~.,data = treinamento)
+previsa_floresta <- predict(modelo_floresta, newdata = teste, type = "class")
+acuracia_foresta <- mean(previsa_floresta == teste$diagnosis)
+
+resultados <- rbind(resultados, c(modelo = "floresta", acuracia = acuracia_foresta))
+resultados
