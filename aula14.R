@@ -24,6 +24,11 @@ modelo <- train(x = treinamento[,-1],
                 preProcess = c("center", "scale"),
                 trControl = validacao_cruzada,
                 tuneGrid = valores_k)
+plot(modelo)
 
+modelo_knn <- knn(train = scale(treinamento[,-1]),
+                  test = scale(teste[,-1]),
+                  cl = treinamento$diagnosis,
+                  k = 5)
 
-
+mean(modelo_knn == teste$diagnosis)
