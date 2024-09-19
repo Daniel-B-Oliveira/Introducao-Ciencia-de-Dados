@@ -21,6 +21,7 @@ soma_7 <- soma == 7
 sum(soma_7)
 mean(soma_7)
 
+soma
 
 #Criacao de tabelas e graficos
 tabela_soma <- table(soma)
