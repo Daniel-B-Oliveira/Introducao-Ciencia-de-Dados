@@ -1,5 +1,5 @@
 #Exercício 1. Crie os seguintes vetores:
-#
+
 #(a) (10, 11, 12,…, 30)
 a <- 10:30
 a
@@ -36,14 +36,12 @@ b
 #(a)
 a <- seq(20,30)
 seq_a <- a**2 + 4*a
-seq_a
 soma_a <- sum(seq_a)
 soma_a
 
 #(b)
 b <- seq(10,20)
 seq_b <- 3**b/b + 2**b/b**2
-seq_b
 soma_b <- sum(seq_b)
 soma_b
 
@@ -57,14 +55,17 @@ sorteio
 #(a) Quantas bolas pares foram sorteadas?
 
 a <- sum(sorteio%%2 == 0)
+a
 
 #(b) Quantas bolas maiores do que 70 foram sorteadas?
 
 b <- sum(sorteio > 70)
+b
 
 #(c) Em quais retiradas (posições) foram sorteadas as bolas ímpares?
 
 c <- which(sorteio %% 2 != 0)
+c
 
 #Exercício 5. Crie um função no R que irá simular sucessivos lançamentos de um
 #dado até que o número 4 seja obtido pela segunda vez. A função deverá retornar
@@ -91,13 +92,13 @@ quantidades <- vector()
 for(i in 1:10000){
   quantidades[i] <- sorteio_4()
 }
+
 mean(quantidades)
 
 #Interpretação, seja X: a lancamento de um dado até que caia 4 pela segunda vez.
 #X~binomialNegativa(n=2, p=1/6), logo, E[X]=n*1/p = 2*6 = 12. Pela lei dos
 #grandes números e pelo fato da media de X ser E[X], a media do vetor quantidades
 #tende a 12.
-
 
 #Exercício 7. Os dois primeiros termos da sequência de Fibonacci são iguais a 1.
 #Os termos subsequentes da sequência são encontrados somando os dois termos
@@ -149,7 +150,6 @@ prop_fracasso
 #zero e menor do que 20) e que retorne 1 se Luke terminou um passeio em sua casa
 #ou retorne zero se Luke caiu no precipício.
 
-
 retorno <- function(L){
   N <- 20
   posicacao <- L
@@ -176,30 +176,167 @@ retornos <- function(L){
   return(mean(sucessos))
 }
 
-retornos(5)
-
 #(c) Use a função criada em (b) para 𝐿 = 1, 2, … , 19 e, em seguida, use esses
 #valores para plotar um gráfico de 𝑥 = 1 ∶ 19 por 𝑦, em que 𝑦 são a
 # proporções retornadas pela função criada em (b) para cada 𝑥.
 
-#install.packages("ggplot2")
 library(ggplot2)
 
-valor_l <- vector()
-alcance <- 1:19
+valor_retorno <- vector()
+valor_L <- 1:19
 
-for(i in alcance){
-  valor_l[i] <- retornos(i)
+for(i in valor_L){
+  valor_retorno[i] <- retornos(i)
 }
 
-
-df <- data.frame(L<-alcance, prop<-valor_l)
+df <- data.frame(L<-valor_L, prop<-valor_retorno)
 
 ggplot(df, aes(x=L, y=prop))+
   geom_point()
 
+#Exercício 10. Harold Frederick Shipman (Nottingham, 14 de janeiro de 1946 —
+#Wakefield, 13 de janeiro de 2004), conhecido como “Doutor Morte”, foi um médico
+#e assassino em série britânico condenado pela morte de muitos pacientes entre as
+# décadas de 1970 e 1990. Dr. Shipman é, talvez, o assassino em série mais
+# prolífico da História Moderna. O arquivo dados.txt contém informações sobre o
+# sexo, a idade, o local da morte (casa do paciente; hospital; casa de repouso)
+# e o ano da morte das vítimas de Shipman. Antes de responder as questões abaixo,
+# abra o arquivo dados.txt e compreenda sua estrutura. Importe o arquivo para o
+# R e utilize-o para responder os seguintes itens.
 
+dados <- read.table("dados.txt", sep=";", header=TRUE)
+str(dados)
 
+dados$LocalDaMorte <- as.factor(dados$LocalDaMorte)
+dados$Genero <- as.factor(dados$Genero)
 
+summary(dados)
 
+#(a) Escolha um gráfico apropriado para representar as frequências das
+#categorias da variável sexo. Comente os resultados encontrados.
 
+ggplot(dados, mapping=aes(Genero))+
+  geom_bar()+
+  theme_minimal()
+
+#(b) Apresente o histograma da variável idade em 8 (argumento bins na geometria
+#do histograma) intervalos. Comente os resultados obtidos. Analise este gráfico
+#para cada gênero.
+
+ggplot(dados, aes(x=Idade))+
+  geom_histogram(bins = 8)+
+  theme_minimal()+
+  facet_wrap(~Genero)
+
+#(c) Apresente o boxplot da variável idade. Comente os resultados obtidos.
+
+ggplot(dados, aes(y=Idade))+
+  geom_boxplot()+
+  theme_minimal()
+
+#(d) Apresente um gráfico para representar o local da morte. Comente os
+#resultados obtidos.
+
+ggplot(dados, aes(x=LocalDaMorte))+
+  geom_bar()+
+  theme_minimal()
+
+#(e) Analise graficamente o ano da morte das vítimas de Harold Shipman.
+
+ggplot(dados, aes(AnoDaMorte))+
+  geom_histogram(bins=10)+
+  theme_minimal()
+
+#Exercício 11. O conjunto primatas.txt apresenta informações sobre tamanho
+# (centímetros), peso (libras) e gênero de bonobos e de chimpanzés. Abra o
+# arquivo e veja como ele está organizado.
+
+primatas <- read.table("primatas.txt", sep=":", header=TRUE)
+str(primatas)
+primatas$especie <- as.factor(primatas$especie)
+primatas$genero <- as.factor(primatas$genero)
+
+#(a) Importe o arquivo para o ambiente do R. Conheça sua estrutura e peça um
+#resumo dos dados com alguma função. (1 ponto)
+
+summary(primatas)
+
+#(b) Construa um gráfico de barras contando quantas espécies de bonobos e
+#chimpanzés há no conjunto. Construa também um gráfico de barras mostrando a
+#frequência de machos e fêmeas de cada espécie. (4 pontos)
+
+ggplot(primatas, aes(x=especie))+
+  geom_bar()
+
+ggplot(primatas, aes(x=genero))+
+  geom_bar()+
+  facet_wrap(~especie)
+
+#Construa um gráfico para comparar as fêmeas e os machos dos bonobos.
+#Em seguida, construa, também, um gráfico para comparar as fêmeas e os machos
+#dos chimpanzés. (4 pontos)
+
+library(dplyr)
+summary(primatas)
+
+primatas |>
+  filter(primatas$especie == "bonobo") |>
+  ggplot(aes(altura, peso, col=genero))+
+  geom_point()+
+  geom_hline(yintercept=38.5)
+  theme_minimal()
+
+primatas |>
+  filter(primatas$especie == "chimpanze") |>
+  ggplot(aes(altura, peso,col=genero))+
+  geom_point()+
+  geom_vline(xintercept=129)
+  theme_minimal()
+  
+#(d) Construa um gráfico para comparar as fêmeas dos bonobos e dos chimpanzés.
+#Em seguida, construa também um gráfico para comparar os machos dos bonobos e
+#dos chimpanzés. (4 pontos)
+
+primatas |>
+  filter(primatas$genero == "femea") |>
+  ggplot(aes(altura, peso, col=especie))+
+  geom_point()+
+  geom_hline(yintercept = 37.45)
+  theme_minimal()
+
+primatas |>
+  filter(primatas$genero == "macho") |>
+  ggplot(aes(altura, peso, col=especie))+
+  geom_point()+
+  geom_hline(yintercept=52.7)
+  theme_minimal()
+
+#(e) A partir das análises dos itens anteriores, escreva um pequeno texto
+#contendo informações sobre os bonobos e os chimpanzés, como exemplo: diferenças
+#entre os gêneros de cada espécie e diferenças entre as espécies. (5 pontos)
+
+#(f) A partir das variáveis tamanho, peso e genero, construa um modelo de árvore
+#de decisão utilizando estruturas condicionais que seja capaz de prever a
+#espécie de uma observação. Calcule a acurácia do modelo. (10 pontos)
+  
+previsao_especie <- vector()
+
+for(i in 1:nrow(primatas)){
+  if(primatas$genero[i] == "femea"){
+    if(primatas$peso[i] > 37.45){
+      previsao_especie[i] <- "chimpanze"
+    }
+    else{
+      previsao_especie[i] <- "bonobo"
+    }
+  }else{
+    if(primatas$peso[i] > 52.7){
+      previsao_especie[i] <- "chimpanze"
+    }else{
+      previsao_especie[i] <- "bonobo"
+    }
+  }
+}
+
+previsao_especie <- as.factor(previsao_especie)
+mean(previsao_especie == primatas$especie)

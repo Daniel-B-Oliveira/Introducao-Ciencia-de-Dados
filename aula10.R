@@ -46,5 +46,5 @@ ggplot(pinguins, aes(x = sex, y = bill_depth_mm)) +
   scale_x_discrete(labels = c("female" = "fêmea", "male" = "macho"))
 
 ggplot(pinguins, aes(x = body_mass_g, y = flipper_length_mm, color = species, size = bill_length_mm ))+
-  #geom_point(alpha = 0.5)
+  geom_point(alpha = 0.5)
   geom_jitter() #Pertuba um pouco a localização da variavel (diminuir sobreposições)
