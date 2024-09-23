@@ -27,7 +27,9 @@ a
 #(b) Crie o vetor (2, 4, 6, 8, 2, 4, 6, 8,…, 2, 4, 6, 8, 2), em que há onze
 #ocorrências do número 2 e dez ocorrências dos números 4, 6 e 8.
 
-b <- rep(seq(2,8, by=2), times=10, length.out=length(a)+1)
+b <- c(rep(seq(2,8, by=2), times=10), 2)
+#ou
+b <- rep(seq(2,8, by=2), times=10, length.out = 41)
 b
 
 #Exercício 3. Utilize a estrutura de vetores do R para realizar as seguintes
@@ -76,7 +78,7 @@ sorteio_4 <- function(){
   n <- 0
   q <- 0
   while(q < 2){
-    q <- q + ( sample(1:6,1) == 4)
+    q <- q + (sample(1:6,1) == 4)
     n <- n + 1
   }
   return(n)
@@ -152,14 +154,11 @@ prop_fracasso
 
 retorno <- function(L){
   N <- 20
-  posicacao <- L
-  while(posicacao > 0 & posicacao < N){
-    posicacao <- posicacao + sample(c(-1,1),size=1,replace=TRUE)
+  posicao <- L
+  while(posicao > 0 & posicao < N){
+    posicao <- posicao + sample(c(-1,1),1)
   }
-  if(posicacao == N){
-    return(1)
-  }
-  return(0)
+  return(posicao/N)
 }
 
 #(b) Crie uma função cuja entrada seja 𝐿; esta função deverá replicar o passeio
@@ -197,12 +196,12 @@ ggplot(df, aes(x=L, y=prop))+
 #Exercício 10. Harold Frederick Shipman (Nottingham, 14 de janeiro de 1946 —
 #Wakefield, 13 de janeiro de 2004), conhecido como “Doutor Morte”, foi um médico
 #e assassino em série britânico condenado pela morte de muitos pacientes entre as
-# décadas de 1970 e 1990. Dr. Shipman é, talvez, o assassino em série mais
-# prolífico da História Moderna. O arquivo dados.txt contém informações sobre o
-# sexo, a idade, o local da morte (casa do paciente; hospital; casa de repouso)
-# e o ano da morte das vítimas de Shipman. Antes de responder as questões abaixo,
-# abra o arquivo dados.txt e compreenda sua estrutura. Importe o arquivo para o
-# R e utilize-o para responder os seguintes itens.
+#décadas de 1970 e 1990. Dr. Shipman é, talvez, o assassino em série mais
+#prolífico da História Moderna. O arquivo dados.txt contém informações sobre o
+#sexo, a idade, o local da morte (casa do paciente; hospital; casa de repouso)
+#e o ano da morte das vítimas de Shipman. Antes de responder as questões abaixo,
+#abra o arquivo dados.txt e compreenda sua estrutura. Importe o arquivo para o
+#R e utilize-o para responder os seguintes itens.
 
 dados <- read.table("dados.txt", sep=";", header=TRUE)
 str(dados)
@@ -219,6 +218,8 @@ ggplot(dados, mapping=aes(Genero))+
   geom_bar()+
   theme_minimal()
 
+#Vítimas mulheres foram bem mais frequentes do que vítimas homens. 
+
 #(b) Apresente o histograma da variável idade em 8 (argumento bins na geometria
 #do histograma) intervalos. Comente os resultados obtidos. Analise este gráfico
 #para cada gênero.
@@ -228,11 +229,19 @@ ggplot(dados, aes(x=Idade))+
   theme_minimal()+
   facet_wrap(~Genero)
 
+#Em relação às vítimas mulheres, possuiam, em sua maioria, entre 70 e 90 anos, 
+#no geral estavam entre 40 e 100 anos. Em relação às vítimas homens, assim como
+#as mulheres, possuiam em média entre 70 e 90 anos, mas com uma dispersão menor
+#estando entre 40 e 90 anos.
+
 #(c) Apresente o boxplot da variável idade. Comente os resultados obtidos.
 
 ggplot(dados, aes(y=Idade))+
   geom_boxplot()+
   theme_minimal()
+
+#Em relação à idade, 75% das vítimas tinham mais de 70 anos, sendo a média entre
+#70 e 83 anos, com 50% das vítimas acima de 75 anos. 
 
 #(d) Apresente um gráfico para representar o local da morte. Comente os
 #resultados obtidos.
@@ -241,23 +250,28 @@ ggplot(dados, aes(x=LocalDaMorte))+
   geom_bar()+
   theme_minimal()
 
+#Grande parto dos assassinatos foram cometidos nas residências das vítimas,
+#sendo os hospitais e casas de repouso locais menos frequentes.
+
 #(e) Analise graficamente o ano da morte das vítimas de Harold Shipman.
 
 ggplot(dados, aes(AnoDaMorte))+
-  geom_histogram(bins=10)+
+  geom_histogram(bins=14)+
   theme_minimal()
 
 #Exercício 11. O conjunto primatas.txt apresenta informações sobre tamanho
 # (centímetros), peso (libras) e gênero de bonobos e de chimpanzés. Abra o
 # arquivo e veja como ele está organizado.
 
-primatas <- read.table("primatas.txt", sep=":", header=TRUE)
-str(primatas)
-primatas$especie <- as.factor(primatas$especie)
-primatas$genero <- as.factor(primatas$genero)
-
 #(a) Importe o arquivo para o ambiente do R. Conheça sua estrutura e peça um
 #resumo dos dados com alguma função. (1 ponto)
+
+primatas <- read.table("primatas.txt", sep=":", header=TRUE)
+
+str(primatas)
+
+primatas$especie <- as.factor(primatas$especie)
+primatas$genero <- as.factor(primatas$genero)
 
 summary(primatas)
 
@@ -272,7 +286,7 @@ ggplot(primatas, aes(x=genero))+
   geom_bar()+
   facet_wrap(~especie)
 
-#Construa um gráfico para comparar as fêmeas e os machos dos bonobos.
+#(c) Construa um gráfico para comparar as fêmeas e os machos dos bonobos.
 #Em seguida, construa, também, um gráfico para comparar as fêmeas e os machos
 #dos chimpanzés. (4 pontos)
 
@@ -283,14 +297,16 @@ primatas |>
   filter(primatas$especie == "bonobo") |>
   ggplot(aes(altura, peso, col=genero))+
   geom_point()+
-  geom_hline(yintercept=38.5)
+  geom_hline(yintercept=38.5)+
+  labs(title = "Macacos da espécie bonobo")+
   theme_minimal()
 
 primatas |>
   filter(primatas$especie == "chimpanze") |>
   ggplot(aes(altura, peso,col=genero))+
   geom_point()+
-  geom_vline(xintercept=129)
+  geom_vline(xintercept=129)+
+  labs(title= "Macacos da espécie chimpanze")
   theme_minimal()
   
 #(d) Construa um gráfico para comparar as fêmeas dos bonobos e dos chimpanzés.
@@ -301,42 +317,73 @@ primatas |>
   filter(primatas$genero == "femea") |>
   ggplot(aes(altura, peso, col=especie))+
   geom_point()+
-  geom_hline(yintercept = 37.45)
+  labs(title= "Fêmeas de bonobos e chimpanzés")+
   theme_minimal()
 
 primatas |>
   filter(primatas$genero == "macho") |>
   ggplot(aes(altura, peso, col=especie))+
   geom_point()+
-  geom_hline(yintercept=52.7)
+  labs(title="Machos de bonobos e chimpanzés")+
   theme_minimal()
 
 #(e) A partir das análises dos itens anteriores, escreva um pequeno texto
 #contendo informações sobre os bonobos e os chimpanzés, como exemplo: diferenças
 #entre os gêneros de cada espécie e diferenças entre as espécies. (5 pontos)
 
+#Nos bonobos, os machos são mais pesados que as fêmeas, com pesos variando de
+#38,5 a 51 kg para os machos e de 27 a 38,5 kg para as fêmeas. Quanto à altura,
+#há uma sobreposição entre os sexos: os machos medem entre 127 e 136 cm,
+#enquanto as fêmeas ficam entre 120 e 130 cm. Já nos chimpanzés, não há
+#sobreposição nem nos pesos nem nas alturas, com os machos sendo mais pesados e
+#mais altos. Os pesos dos machos variam de 50 a 65 kg e os das fêmeas de 36 a
+#48 kg; em altura, os machos medem entre 130 e 138 cm e as fêmeas entre 120 e
+#138 cm. Comparando as duas espécies, percebe-se que os chimpanzés, tanto machos
+#quanto fêmeas, tendem a ser mais pesados que os bonobos, embora as alturas
+#possam se sobrepor entre fêmeas e machos de ambas as espécies. 
+
 #(f) A partir das variáveis tamanho, peso e genero, construa um modelo de árvore
 #de decisão utilizando estruturas condicionais que seja capaz de prever a
 #espécie de uma observação. Calcule a acurácia do modelo. (10 pontos)
-  
-previsao_especie <- vector()
 
-for(i in 1:nrow(primatas)){
-  if(primatas$genero[i] == "femea"){
-    if(primatas$peso[i] > 37.45){
-      previsao_especie[i] <- "chimpanze"
-    }
-    else{
-      previsao_especie[i] <- "bonobo"
+n <- round(nrow(primatas)*0.8)
+id_treino <- sample(1:nrow(primatas),n,FALSE)
+
+treino <- primatas[id_treino,]
+teste <- primatas[-id_treino,]
+
+treino |>
+  filter(treino$genero == "femea")|>
+  ggplot(aes(altura, peso, col=especie))+
+  geom_hline(yintercept = 37.45)+
+  geom_point()
+
+treino |>
+  filter(treino$genero != "femea")|>
+  ggplot(aes(altura, peso, col=especie))+
+  geom_hline(yintercept=52.7)+
+  geom_point()
+
+
+previsao <- vector()
+
+for(i in 1:nrow(teste)){
+  if(teste$genero[i] == 'femea'){
+    if(teste$peso[i] > 37.45){
+      previsao[i] <- "chimpanze"
+    }else{
+      previsao[i] <- "bonobo"
     }
   }else{
-    if(primatas$peso[i] > 52.7){
-      previsao_especie[i] <- "chimpanze"
+    if(teste$peso[i] > 52.7){
+      previsao[i] <- "chimpanze"
     }else{
-      previsao_especie[i] <- "bonobo"
+      previsao[i] <- "bonobo"
     }
   }
 }
 
-previsao_especie <- as.factor(previsao_especie)
-mean(previsao_especie == primatas$especie)
+mean(previsao == teste$especie)
+
+
+
