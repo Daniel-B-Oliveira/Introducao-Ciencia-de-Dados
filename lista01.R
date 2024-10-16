@@ -385,5 +385,14 @@ for(i in 1:nrow(teste)){
 
 mean(previsao == teste$especie)
 
+#ou
+
+library(rpart)
+library(rpart.plot)
+
+arvore_macacos <- rpart(especie~., treino, method = "class")
+previsao_arvore <- predict(arvore_macacos, newdata = teste, type="class")
+
+mean(previsao_arvore == teste$especie)
 
 
