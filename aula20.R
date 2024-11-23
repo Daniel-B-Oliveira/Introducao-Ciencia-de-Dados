@@ -51,29 +51,28 @@ tokens_noticias <- tokens(noticias$texto,
 
 tokens_noticias
 
+?dfm
+
 matriz_frequencia <- dfm(tokens_noticias)
 matriz_frequencia
+matriz_frequencia + 1
+(matriz_frequencia[1,1] + 1)
+
 
 n <- round(0.8*nrow(noticias))
+id <- sample(1:nrow(noticias), n, FALSE)
 
+treino <- matriz_frequencia[id,]
+teste <- matriz_frequencia[-id,]
 
+noticias$categorias[id]
 
+?textmodel_nb
+modeloNb <- textmodel_nb(treino, noticias$categorias[id])
 
+previsaoNb <- predict(modeloNb, newdata = teste)
+previsaoNb
 
+mean(previsaoNb == noticias$categorias[-id])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+table(Previsao = previsaoNb, Real = noticias$categorias[-id])
